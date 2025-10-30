@@ -1,16 +1,21 @@
-import requests
 from translatepy.translators.google import GoogleTranslate
+import json
 
 
 gtranslate = GoogleTranslate()
-url_random = "https://random-word-api.herokuapp.com/word"
+
+with open("data/engword.json", "r", encoding="utf-8") as fileng:
+    dataeng = json.load(fileng)
+fileng.close()
 
 
-def get_random_words(length: int = 10) -> list[str]:
-    return [gtranslate.translate(
-        requests.get(url=url_random).text[2:-2], "Russia"
-    ).result
-        for _ in range(length)]
+datarus = []
+for word in dataeng:
 
+    wordrus = gtranslate.translate(word, "Russia").result
+    if wordrus.count(" "):
+        continue
+    datarus += [datarus]
 
-print(get_random_words(length=100))
+with open("data/rusword.json", "w", encoding="utf-8") as filerus:
+    json.dump(datarus, filerus, ensure_ascii=False, indent=4)

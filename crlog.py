@@ -8,3 +8,10 @@ def create_logger():
     logfile = logging.FileHandler("game.log")
 
     fmt = '[%(asctime)s] - %(levelname)s - %(message)'
+    formatter = logging.Formatter(fmt)
+
+    logfile.setFormatter(formatter)
+    logger.addHandler(logfile)
+    
+    return logger
+
