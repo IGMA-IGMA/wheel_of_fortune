@@ -1,6 +1,9 @@
 import randgen
+import linecache
+import random
 
 path_word_db = "data/words.txt"
+Path = "data\\words.txt"
 
 
 def add_word_in_txt_file(path: str = path_word_db) -> bool | Exception:
@@ -13,3 +16,7 @@ def add_word_in_txt_file(path: str = path_word_db) -> bool | Exception:
         return ex
 
 
+def get_random_word_file(path: str = Path) -> str | Exception:
+    rand_word = linecache.getline(
+        path, random.randint(1, len(open(path).readlines())))
+    return rand_word.rstrip()
