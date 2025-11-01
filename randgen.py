@@ -1,5 +1,6 @@
 import requests
 from translatepy.translators.google import GoogleTranslate
+from typing import List, Optional
 
 
 gtranslate = GoogleTranslate()
@@ -7,7 +8,7 @@ Url_random = "https://random-word-api.herokuapp.com/word"
 Path = "data\\words.txt"
 
 
-def get_random_words(length: int = 15) -> list[str]:
+def get_random_words(length: Optional[int] = 15) -> List[str]:
     data_words = []
     while len(data_words) < length:
         print(data_words)
