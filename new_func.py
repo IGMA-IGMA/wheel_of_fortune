@@ -1,17 +1,25 @@
 from typing import Optional
-from classgame import new_type
+from classgame.new_type import NewType
 
-type letter_dict = dict[str, list[int]]
 
-def start_word_ind(word: Optional[str]) -> dict[str, list[int]]:
+def start_word_ind(word: Optional[str]) -> NewType.letter_dict:
     letter_otvet = {}
     for i in range(len(word)):
-        if word[i] not in l:
-             = []
+        if word[i] == '-':
+            continue
+        elif word[i] not in letter_otvet:
+            letter_otvet[word[i]] = [i]
+        else:
+            letter_otvet[word[i]] += [i]
+    return letter_otvet
 
 
 def start_square(word: Optional[str]) -> Optional[str]:
-    return len(word) * "■"
+    return "".join(["■" if i != '-' else '-' for i in word])
 
 
-def replace_letter()
+def replace_letter():
+    pass
+
+
+print(start_square("w-o-r-d"))

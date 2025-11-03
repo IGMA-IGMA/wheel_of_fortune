@@ -1,4 +1,3 @@
-# advanced_init_updater.py
 import os
 import ast
 import glob
@@ -18,7 +17,7 @@ class InitUpdater:
         public_names = []
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
-                if not node.name.startswith('_'):  
+                if not node.name.startswith('_'):
                     public_names.append(node.name)
             elif isinstance(node, ast.Assign):
                 for target in node.targets:
@@ -53,5 +52,6 @@ class InitUpdater:
 
         print(f"Обновлен {init_path}")
 
-updater = InitUpdater("classgame")  
+
+updater = InitUpdater("data")
 updater.update_init()
