@@ -24,6 +24,3 @@ def replace_letter(letter: str, word_square: str, letter_dict: NewType.letter_di
     return "".join(word_square)
 
 
-sq, lett = start_word_ind("учебакакашка")["result"]
-
-print(replace_letter("а", sq, lett))
