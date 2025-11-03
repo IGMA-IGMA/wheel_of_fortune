@@ -1,8 +1,10 @@
 from typing import Optional
 from classgame.new_type import NewType
+from decorators import handle_result
 
 
-def start_word_ind(word: Optional[str]) -> NewType.letter_dict:
+@handle_result
+def start_word_ind(word: Optional[str]) -> NewType.ret_dict:
     letter_otvet = {}
     for i in range(len(word)):
         if word[i] == '-':
@@ -11,15 +13,17 @@ def start_word_ind(word: Optional[str]) -> NewType.letter_dict:
             letter_otvet[word[i]] = [i]
         else:
             letter_otvet[word[i]] += [i]
-    return letter_otvet
+    return ["".join(["■" if i != '-' else '-' for i in word]), letter_otvet]
 
 
-def start_square(word: Optional[str]) -> Optional[str]:
-    return "".join(["■" if i != '-' else '-' for i in word])
+@handle_result
+def replace_letter(letter: str, word_square: str, letter_dict: NewType.letter_dict) -> NewType.ret_dict:
+    word_square = list(word_square)
+    for i in letter_dict[letter]:
+        word_square[i] = letter
+    return "".join(word_square)
 
 
-def replace_letter():
-    pass
+sq, lett = start_word_ind("учебакакашка")["result"]
 
-
-print(start_square("w-o-r-d"))
+print(replace_letter("а", sq, lett))

@@ -53,5 +53,5 @@ class InitUpdater:
         print(f"Обновлен {init_path}")
 
 
-updater = InitUpdater("data")
+updater = InitUpdater(".")
 updater.update_init()

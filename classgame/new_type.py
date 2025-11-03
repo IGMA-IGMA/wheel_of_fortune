@@ -7,3 +7,4 @@ class NewType:
         Literal["exception", "result"], 
         Union[Optional[Exception], Any]
     ]
+
