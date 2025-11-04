@@ -26,7 +26,9 @@
 ┣ 🐍 game.py
 ┣ 📄 guide.ipynb
 ┣ 🐍 new_func.py
+┣ 📄 poetry.lock
+┣ 📄 pyproject.toml.bak
 ┗ 🐍 randgen.py
 ```
-📅 Обновлено: 2025-11-04 15:41
+📅 Обновлено: 2025-11-04 20:51
 <!-- PROJECT TREE END -->
