@@ -1,10 +1,11 @@
 import os
 
 
-def a(comment):
+def auto_commit(comment: str):
     os.system("git add .")
     os.system(f"git commit -a -m {comment}")
     os.system("git push")
 
 
-a("808")
+if __name__ == "__main__":
+    auto_commit(input("Коментарий к комиту: "))
