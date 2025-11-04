@@ -1,0 +1,7 @@
+{
+  "include_dirs": [],
+  "include_files_pattern": [],
+  "exclude_dirs": ["myenv", "__pycache__", ".git", "help_script"],
+  "enable_dry_run": false,
+  "log_file": "clean_code.log"
+}

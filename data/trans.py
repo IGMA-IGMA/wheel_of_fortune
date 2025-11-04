@@ -1,42 +1,44 @@
-import json
 import asyncio
-import aiohttp
-import aiofiles
+import json
 import os
+from typing import Dict, List
+
+import aiofiles
+import aiohttp
 from aiohttp import ClientSession
-from typing import List, Dict
-from hashlib import md5
 
 INPUT_PATH = "engword.json"
 OUTPUT_PATH = "rusword.json"
 CACHE_PATH = "translation_cache.json"
 
 # Настройки
-BATCH_SIZE = 200       
-CONCURRENCY = 10        
+BATCH_SIZE = 200
+CONCURRENCY = 10
 API_URL = "https://translate.googleapis.com/translate_a/single"
 
-async def translate_text(session: ClientSession, text: str, source="en", target="ru") -> str:
-    params = {
-        "client": "gtx",
-        "sl": source,
-        "tl": target,
-        "dt": "t",
-        "q": text
-    }
+
+async def translate_text(
+    session: ClientSession, text: str, source="en", target="ru"
+) -> str:
+    params = {"client": "gtx", "sl": source, "tl": target, "dt": "t", "q": text}
     async with session.get(API_URL, params=params) as resp:
         data = await resp.json(content_type=None)
         return data[0][0][0].lower()
+
 
 async def load_json(path: str) -> List[str]:
     async with aiofiles.open(path, "r", encoding="utf-8") as f:
         return json.loads(await f.read())
 
+
 async def save_json(data, path: str):
     async with aiofiles.open(path, "w", encoding="utf-8") as f:
         await f.write(json.dumps(data, ensure_ascii=False, indent=2))
 
-async def process_batch(session: ClientSession, batch: List[str], cache: Dict[str, str]) -> Dict[str, str]:
+
+async def process_batch(
+    session: ClientSession, batch: List[str], cache: Dict[str, str]
+) -> Dict[str, str]:
     results = {}
     tasks = []
     for word in batch:
@@ -54,6 +56,7 @@ async def process_batch(session: ClientSession, batch: List[str], cache: Dict[st
 
     return results
 
+
 async def main():
     print("Загрузка входных данных...")
     words = await load_json(INPUT_PATH)
@@ -70,7 +73,7 @@ async def main():
 
     async with aiohttp.ClientSession() as session:
         for i in range(0, len(words), BATCH_SIZE):
-            batch = words[i:i+BATCH_SIZE]
+            batch = words[i : i + BATCH_SIZE]
             print(f"Перевод батча {i}–{i+len(batch)-1}...")
 
             results = await process_batch(session, batch, cache)
@@ -93,6 +96,7 @@ async def main():
     await save_json(final, OUTPUT_PATH)
     await save_json(cache, CACHE_PATH)
     print(f"✅ Перевод завершён. Файл сохранён: {OUTPUT_PATH}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
