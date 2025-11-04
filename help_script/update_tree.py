@@ -1,107 +1,154 @@
 import os
-import argparse
 from pathlib import Path
+from datetime import datetime
 
-def generate_project_tree(start_path: str) -> str:
-    tree_lines = []
-    start_path = Path(start_path)
-    
-    ignore_dirs = {'.git', '__pycache__', '.pytest_cache', 'venv', 'env', 'node_modules', '.idea', '.vscode', 'help_scripts'}
-    ignore_files = {'.DS_Store', '.gitignore', '.env', 'Thumbs.db'}
-    
-    def add_directory(path: Path, prefix: str = "", is_last: bool = True):
-        connector = "└── " if is_last else "├── "
-        tree_lines.append(f"{prefix}{connector}{path.name}/")
-        
-        new_prefix = prefix + ("    " if is_last else "│   ")
-        
-        try:
-            items = sorted([item for item in path.iterdir()])
-            
-            items = [item for item in items 
-                    if not (item.is_dir() and item.name in ignore_dirs) 
-                    and not (item.is_file() and item.name in ignore_files)]
-            
-            dirs = [item for item in items if item.is_dir()]
-            files = [item for item in items if item.is_file()]
-            sorted_items = dirs + files
-            
-            for i, item in enumerate(sorted_items):
-                is_last_item = i == len(sorted_items) - 1
-                
-                if item.is_dir():
-                    add_directory(item, new_prefix, is_last_item)
-                else:
-                    connector = "└── " if is_last_item else "├── "
-                    tree_lines.append(f"{new_prefix}{connector}{item.name}")
-                    
-        except PermissionError:
-            tree_lines.append(f"{new_prefix}└── [Permission denied]")
-    
-    tree_lines.append(f"{start_path.name}/")
-    add_directory(start_path, "", True)
-    
-    return "\n".join(tree_lines)
+# === ОСНОВНЫЕ НАСТРОЙКИ ===
+ROOT_DIR = Path(__file__).resolve().parent.parent
+README_PATH = ROOT_DIR / "README.md"
 
-def update_readme_with_tree(readme_path: str, project_tree: str, marker: str = "## Project Structure") -> bool:
-    if not os.path.exists(readme_path):
-        with open(readme_path, 'w', encoding='utf-8') as f:
-            f.write(f"# Project\n\n{marker}\n\n```\n{project_tree}\n```\n")
-        return True
-    
-    with open(readme_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    if marker in content:
-        lines = content.split('\n')
-        new_lines = []
-        skip_section = False
-        
-        for line in lines:
-            if marker in line:
-                skip_section = True
-                new_lines.append(line)
-                new_lines.append('')
-                new_lines.append('```')
-                new_lines.append(project_tree)
-                new_lines.append('```')
-            elif skip_section and line.strip() == '```':
-                continue
-            elif skip_section and not line.strip().startswith('```'):
-                skip_section = False
-                if line.strip():
-                    new_lines.append(line)
-            elif not skip_section:
-                new_lines.append(line)
-        
-        new_content = '\n'.join(new_lines)
+START_TAG = "<!-- PROJECT TREE START -->"
+END_TAG = "<!-- PROJECT TREE END -->"
+
+# --- Игнорируем служебные папки и файлы ---
+IGNORED_DIRS = {
+    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache",
+    ".tox", ".git", ".idea", ".vscode", "build", "dist",
+    "site-packages", "node_modules", "help_script"
+}
+
+IGNORED_FILES = {
+    ".gitignore", ".gitattributes", ".DS_Store", "Thumbs.db",
+    "desktop.ini", "pip-selfcheck.json", ".coverage",
+    ".pylintrc", "mypy.ini", "pytest.ini", "setup.py",
+    "pyproject.toml", "requirements.txt"
+}
+
+# --- Иконки для файлов по расширению ---
+FILE_ICONS = {
+    # 🐍 Python
+    ".py": "🐍",
+    ".pyw": "🐍",
+    # 📄 Текстовые
+    ".txt": "📜",
+    ".md": "📝",
+    ".rst": "📘",
+    ".log": "🧾",
+    # ⚙️ Конфиги / данные
+    ".json": "🧩",
+    ".yaml": "⚙️",
+    ".yml": "⚙️",
+    ".ini": "⚙️",
+    ".cfg": "⚙️",
+    ".toml": "⚙️",
+    # 📁 Документы
+    ".pdf": "📕",
+    ".docx": "📗",
+    ".doc": "📗",
+    ".csv": "📊",
+    ".xlsx": "📊",
+    ".xls": "📊",
+    # 🌐 Web
+    ".html": "🌐",
+    ".css": "🎨",
+    ".js": "🧠",
+    ".ts": "🧠",
+    ".vue": "💚",
+    # 🖼️ Изображения
+    ".png": "🖼️",
+    ".jpg": "🖼️",
+    ".jpeg": "🖼️",
+    ".gif": "🖼️",
+    ".svg": "🖌️",
+    # 📦 Архивы
+    ".zip": "🗜️",
+    ".tar": "🗜️",
+    ".gz": "🗜️",
+    ".rar": "🗜️",
+}
+
+
+def is_virtual_env(path: Path) -> bool:
+    if not path.is_dir():
+        return False
+    indicators = ["pyvenv.cfg", "bin", "Scripts", "Lib", "Include"]
+    for item in indicators:
+        if (path / item).exists():
+            return True
+    return False
+
+
+def should_include(entry: str, path: Path) -> bool:
+    if entry.startswith("."):
+        return False
+    if path.is_dir():
+        if entry in IGNORED_DIRS or is_virtual_env(path):
+            return False
     else:
-        new_content = content + f"\n\n{marker}\n\n```\n{project_tree}\n```\n"
-    
-    with open(readme_path, 'w', encoding='utf-8') as f:
-        f.write(new_content)
-    
+        if entry in IGNORED_FILES:
+            return False
     return True
 
-def main():
-    parser = argparse.ArgumentParser(description='Update project tree in README.md')
-    parser.add_argument('--path', '-p', default='..', help='Project root path')
-    parser.add_argument('--readme', '-r', default='../README.md', help='README file name')
-    parser.add_argument('--marker', '-m', default='## Project Structure', help='Marker to find/replace tree section')
-    
-    args = parser.parse_args()
-    
-    project_tree = generate_project_tree(args.path)
-    
-    readme_path = os.path.join(args.path, args.readme) if args.readme.startswith('/') else args.readme
-    success = update_readme_with_tree(readme_path, project_tree, args.marker)
-    
-    if success:
-        print(f"✅ Project tree successfully updated in {readme_path}")
-        print(f"\nGenerated tree:\n")
-        print(project_tree)
+
+def get_icon_for_file(file_path: Path) -> str:
+    ext = file_path.suffix.lower()
+    return FILE_ICONS.get(ext, "📄")
+
+
+def generate_tree(start_path: Path, prefix=""):
+    tree_lines = []
+    try:
+        entries = sorted(os.listdir(start_path))
+    except PermissionError:
+        return tree_lines
+
+    entries = [e for e in entries if should_include(e, start_path / e)]
+
+    for i, entry in enumerate(entries):
+        path = start_path / entry
+        connector = "┗" if i == len(entries) - 1 else "┣"
+        if path.is_dir():
+            tree_lines.append(f"{prefix}{connector} 📂 {entry}")
+            new_prefix = prefix + ("  " if i == len(entries) - 1 else "┃ ")
+            tree_lines.extend(generate_tree(path, new_prefix))
+        else:
+            icon = get_icon_for_file(path)
+            tree_lines.append(f"{prefix}{connector} {icon} {entry}")
+    return tree_lines
+
+
+def update_readme():
+    project_name = ROOT_DIR.name
+    tree = "\n".join(generate_tree(ROOT_DIR))
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    block = (
+        f"{START_TAG}\n"
+        f"📦 **{project_name}**\n\n"
+        f"```\n{tree}\n```\n"
+        f"📅 Обновлено: {timestamp}\n"
+        f"{END_TAG}"
+    )
+
+    if not README_PATH.exists():
+        with open(README_PATH, "w", encoding="utf-8") as f:
+            f.write(f"# {project_name}\n\n{block}\n")
+        print("✅ README.md создан в корне проекта.")
+        return
+
+    with open(README_PATH, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    if START_TAG in content and END_TAG in content:
+        before = content.split(START_TAG)[0]
+        after = content.split(END_TAG)[1]
+        new_content = before + block + after
     else:
-        print("❌ Failed to update README")
+        new_content = content.strip() + "\n\n" + block
+
+    with open(README_PATH, "w", encoding="utf-8") as f:
+        f.write(new_content)
+
+    print(f"✅ README.md обновлён деревом проекта в: {README_PATH}")
+
 
 if __name__ == "__main__":
-    main()
+    update_readme()
