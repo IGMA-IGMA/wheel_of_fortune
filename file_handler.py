@@ -5,7 +5,6 @@ from typing import Optional
 import randgen
 from classgame.new_type import NewType
 
-
 path_word_db = "data/words.txt"
 
 
