@@ -7,4 +7,3 @@ class NewType:
     ret_dict = dict[Literal["exception", "result"], Union[Optional[Exception], Any]]
 
     file_path = str
-    
