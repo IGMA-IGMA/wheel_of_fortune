@@ -18,17 +18,16 @@
 ┃ ┣ 🧩 engword.json
 ┃ ┣ 📜 record.txt
 ┃ ┣ 🧩 rusword.json
-┃ ┣ 🐍 trans.py
 ┃ ┣ 🧩 translation_cache.json
 ┃ ┗ 📜 words.txt
 ┣ 🐍 decorators.py
 ┣ 🐍 file_handler.py
 ┣ 🐍 game.py
 ┣ 📄 guide.ipynb
-┣ 🐍 new_func.py
 ┣ 📄 poetry.lock
 ┣ 📄 pyproject.toml.bak
-┗ 🐍 randgen.py
+┣ 🐍 randgen.py
+┗ 🐍 work_with_word.py
 ```
-📅 Обновлено: 2025-11-04 20:51
+📅 Обновлено: 2025-11-05 16:41
 <!-- PROJECT TREE END -->
