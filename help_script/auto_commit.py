@@ -1,5 +1,6 @@
 import os
 import subprocess
+from datetime import datetime
 
 
 def auto_commit():
@@ -179,10 +180,10 @@ def auto_commit_simple():
     os.system("git push")
 
     print(f"✅ Коммит выполнен: {commit_message}")
-    return commit_message
+    return commit_message, changed_files
 
 
-def update_readme_changelog():
+def update_readme_changelog(commit_message: str, changed_files: list):
     try:
         # Ищем README.md в разных возможных местах
         possible_paths = [
@@ -208,9 +209,22 @@ def update_readme_changelog():
 
         if last_commit:
             commit_hash = last_commit[:7]
-            commit_msg = last_commit[8:]
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-            changelog_entry = f"- `{commit_hash}`: {commit_msg}\n"
+            # Создаем детальную запись для changelog
+            changelog_entry = f"### {current_date} | `{commit_hash}`\n"
+            changelog_entry += f"**Сообщение:** {commit_message}\n\n"
+
+            # Добавляем список измененных файлов
+            if changed_files:
+                changelog_entry += "**Измененные файлы:**\n"
+                for file in changed_files[:15]:  # Показываем первые 15 файлов
+                    file_emoji = "📝" if 'readme' in file.lower() else "🔧"
+                    changelog_entry += f"- {file_emoji} `{file}`\n"
+                if len(changed_files) > 15:
+                    changelog_entry += f"- ... и еще {len(changed_files) - 15} файлов\n"
+
+            changelog_entry += "\n---\n\n"
 
             with open(readme_path, "r", encoding="utf-8") as f:
                 content = f.read()
@@ -222,29 +236,28 @@ def update_readme_changelog():
 
             for header in changelog_headers:
                 if header in content:
+                    # Вставляем после заголовка
                     content = content.replace(
-                        header, f"{header}\n{changelog_entry}")
+                        header, f"{header}\n\n{changelog_entry}")
                     header_found = True
                     break
 
             if not header_found:
                 # Если раздела нет, добавляем в конец
-                content += f"\n## Changelog\n{changelog_entry}"
+                content += f"\n## Changelog\n\n{changelog_entry}"
 
             with open(readme_path, "w", encoding="utf-8") as f:
                 f.write(content)
 
             print(f"📝 Changelog обновлен в {readme_path}")
+            print(f"📋 Добавлено {len(changed_files)} измененных файлов")
 
     except Exception as e:
         print(f"❌ Ошибка при обновлении README: {e}")
 
 
 if __name__ == "__main__":
-    commit_msg = auto_commit_simple()
+    commit_msg, changed_files_list = auto_commit_simple()
 
-    # Обновляем README только если в коммите есть изменения README
-    if 'README' in commit_msg or 'readme' in commit_msg.lower():
-        update_readme_changelog()
-    else:
-        print("ℹ️  README не изменялся, пропускаем обновление changelog")
+    # Всегда обновляем README с информацией о коммите
+    update_readme_changelog(commit_msg, changed_files_list)
