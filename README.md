@@ -11,6 +11,7 @@
 ┃ ┣ 🐍 __init__.py
 ┃ ┣ 🐍 message.py
 ┃ ┣ 🐍 new_type.py
+┃ ┣ 🐍 path_class.py
 ┃ ┗ 🐍 user_info.py
 ┣ 🐍 crlog.py
 ┣ 📂 data
@@ -26,8 +27,7 @@
 ┣ 📄 guide.ipynb
 ┣ 📄 poetry.lock
 ┣ 📄 pyproject.toml.bak
-┣ 🐍 randgen.py
 ┗ 🐍 work_with_word.py
 ```
-📅 Обновлено: 2025-11-06 09:02
+📅 Обновлено: 2025-11-06 11:40
 <!-- PROJECT TREE END -->
