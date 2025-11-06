@@ -89,7 +89,7 @@ def categorize_files(files: list) -> dict:
             categories['python'] += 1
         elif file.endswith(('.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.env')):
             categories['config'] += 1
-        elif file.lower() in ['readme.md', 'readme.txt', 'readme']:
+        elif file.lower() in ['readme.md', 'readme.txt', 'readme'] or 'readme' in file.lower():
             categories['readme'] += 1
         elif file.endswith(('.md', '.txt', '.rst', '.doc', '.docx')):
             categories['documentation'] += 1
@@ -109,13 +109,12 @@ def auto_commit_simple():
         print("❌ Нет изменений для коммита")
         return
 
-    readme_changes = [
-        f for f in changed_files if f.lower().startswith('readme')]
+    readme_changes = [f for f in changed_files if 'readme' in f.lower()]
     has_readme = len(readme_changes) > 0
 
     print("📁 Измененные файлы:")
     for i, file in enumerate(changed_files[:10], 1):
-        readme_flag = " 📝" if file.lower().startswith('readme') else ""
+        readme_flag = " 📝" if 'readme' in file.lower() else ""
         print(f"  {i}. {file}{readme_flag}")
     if len(changed_files) > 10:
         print(f"  ... и еще {len(changed_files) - 10} файлов")
@@ -129,9 +128,10 @@ def auto_commit_simple():
     print("3. Рефакторинг кода")
     print("4. Обновление документации")
     print("5. Обновление README")
-    print("6. Другое")
+    print("6. Не знаю")
+    print("7. Другое")
 
-    choice = input("Выберите тип изменений (1-6): ").strip()
+    choice = input("Выберите тип изменений (1-7): ").strip()
 
     change_types = {
         '1': '🚀 Новый функционал',
@@ -139,18 +139,29 @@ def auto_commit_simple():
         '3': '♻️ Рефакторинг кода',
         '4': '📚 Обновление документации',
         '5': '📝 Обновление README',
-        '6': '🔧 Обновление проекта'
+        '6': '🔧 Обновление проекта',
+        '7': '🔧 Обновление проекта'
     }
 
     base_message = change_types.get(choice, '🔧 Обновление проекта')
 
-    if choice == '6':
+    if choice == '7':
         custom_msg = input("Введите комментарий: ").strip()
         commit_message = f"{base_message}: {custom_msg}"
+    elif choice == '6':
+        file_count = len(changed_files)
+        main_files = changed_files[:3]
+        files_info = ", ".join(main_files)
+        if file_count > 3:
+            files_info += f" и еще {file_count - 3} файлов"
+        commit_message = f"🔧 Обновление проекта | {files_info}"
     elif choice == '5' and has_readme:
         readme_details = input(
             "Что изменилось в README? (добавлен раздел, обновлена документация и т.д.): ").strip()
-        commit_message = f"📝 Обновление README: {readme_details}"
+        if readme_details:
+            commit_message = f"📝 Обновление README: {readme_details}"
+        else:
+            commit_message = "📝 Обновление README"
     else:
         file_count = len(changed_files)
         main_files = changed_files[:2]
@@ -168,37 +179,72 @@ def auto_commit_simple():
     os.system("git push")
 
     print(f"✅ Коммит выполнен: {commit_message}")
+    return commit_message
 
 
 def update_readme_changelog():
-    result = subprocess.run(["git", "log", "--oneline", "-1"],
-                            capture_output=True, text=True)
-    last_commit = result.stdout.strip() if result.stdout else ""
+    try:
+        # Ищем README.md в разных возможных местах
+        possible_paths = [
+            "README.md",
+            "./README.md",
+            "../README.md",
+            "../../README.md"
+        ]
 
-    if last_commit:
-        commit_hash = last_commit[:7]
-        commit_msg = last_commit[8:]
+        readme_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                readme_path = path
+                break
 
-        changelog_entry = f"- {commit_hash}: {commit_msg}\n"
+        if not readme_path:
+            print("❌ README.md не найден")
+            return
 
-        with open("./README.md", "r", encoding="utf-8") as f:
-            content = f.read()
+        result = subprocess.run(["git", "log", "--oneline", "-1"],
+                                capture_output=True, text=True)
+        last_commit = result.stdout.strip() if result.stdout else ""
 
-        if "## Changelog" in content:
-            content = content.replace(
-                "## Changelog", f"## Changelog\n{changelog_entry}")
-        elif "## История изменений" in content:
-            content = content.replace(
-                "## История изменений", f"## История изменений\n{changelog_entry}")
-        else:
-            content += f"\n## Changelog\n{changelog_entry}"
+        if last_commit:
+            commit_hash = last_commit[:7]
+            commit_msg = last_commit[8:]
 
-        with open("README.md", "w", encoding="utf-8") as f:
-            f.write(content)
+            changelog_entry = f"- `{commit_hash}`: {commit_msg}\n"
 
-        print("📝 Changelog обновлен в README.md")
+            with open(readme_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # Ищем раздел Changelog в разных вариантах написания
+            changelog_headers = [
+                "## Changelog", "## История изменений", "## CHANGELOG", "## Изменения"]
+            header_found = False
+
+            for header in changelog_headers:
+                if header in content:
+                    content = content.replace(
+                        header, f"{header}\n{changelog_entry}")
+                    header_found = True
+                    break
+
+            if not header_found:
+                # Если раздела нет, добавляем в конец
+                content += f"\n## Changelog\n{changelog_entry}"
+
+            with open(readme_path, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            print(f"📝 Changelog обновлен в {readme_path}")
+
+    except Exception as e:
+        print(f"❌ Ошибка при обновлении README: {e}")
 
 
 if __name__ == "__main__":
-    auto_commit_simple()
-    update_readme_changelog()
+    commit_msg = auto_commit_simple()
+
+    # Обновляем README только если в коммите есть изменения README
+    if 'README' in commit_msg or 'readme' in commit_msg.lower():
+        update_readme_changelog()
+    else:
+        print("ℹ️  README не изменялся, пропускаем обновление changelog")
