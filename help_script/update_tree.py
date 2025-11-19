@@ -116,7 +116,7 @@ def generate_tree(start_path: Path, prefix=""):
     return tree_lines
 
 
-def update_readme():
+def update_readme() -> None:# -> Any:
     project_name = ROOT_DIR.name
     tree = "\n".join(generate_tree(ROOT_DIR))
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
