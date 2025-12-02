@@ -33,7 +33,7 @@ class Message:
     @staticmethod
     def get_difficulty_level(choice: str) -> int:
         return Message.LEVEL[choice]
-    
+
     @staticmethod
     def get_step_game(num_word, word_befor, life_user):
         return f"Слово №{num_word} из 15\n{word_befor}\nКоличество жизней: {"♥" * life_user}"

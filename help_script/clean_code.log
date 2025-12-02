@@ -205,3 +205,36 @@
 2025-11-19 15:03:31,557 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\__init__.py
 2025-11-19 15:03:33,734 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\data\__init__.py
 2025-11-19 15:03:36,072 INFO: === Cleaning finished ===
+2025-11-20 12:58:04,718 INFO: === Start cleaning run ===
+2025-11-20 12:58:11,049 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\crlog.py
+2025-11-20 12:58:13,732 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\decorators.py
+2025-11-20 12:58:16,421 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\file_handler.py
+2025-11-20 12:58:19,430 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\game.py
+2025-11-20 12:58:22,185 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\setup.py
+2025-11-20 12:58:24,985 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\work_with_word.py
+2025-11-20 12:58:27,786 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\__init__.py
+2025-11-20 12:58:30,582 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\__main__.py
+2025-11-20 12:58:33,497 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\message.py
+2025-11-20 12:58:36,591 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\new_type.py
+2025-11-20 12:58:39,574 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\path_class.py
+2025-11-20 12:58:42,003 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\user_info.py
+2025-11-20 12:58:45,512 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\__init__.py
+2025-11-20 12:58:48,403 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\data\__init__.py
+2025-11-20 12:58:51,633 INFO: === Cleaning finished ===
+2025-11-24 19:02:46,589 INFO: === Start cleaning run ===
+2025-11-24 19:02:58,037 INFO: === Start cleaning run ===
+2025-11-24 19:03:03,411 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\crlog.py
+2025-11-24 19:03:04,940 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\decorators.py
+2025-11-24 19:03:06,458 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\file_handler.py
+2025-11-24 19:03:08,018 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\game.py
+2025-11-24 19:03:09,717 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\setup.py
+2025-11-24 19:03:11,450 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\work_with_word.py
+2025-11-24 19:03:12,965 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\__init__.py
+2025-11-24 19:03:14,580 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\__main__.py
+2025-11-24 19:03:16,160 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\message.py
+2025-11-24 19:03:17,654 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\new_type.py
+2025-11-24 19:03:19,157 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\path_class.py
+2025-11-24 19:03:20,768 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\user_info.py
+2025-11-24 19:03:22,304 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\classgame\__init__.py
+2025-11-24 19:03:23,806 INFO: Cleaning file: C:\Users\IGMA\Desktop\wheel_of_fortune\data\__init__.py
+2025-11-24 19:03:25,495 INFO: === Cleaning finished ===
