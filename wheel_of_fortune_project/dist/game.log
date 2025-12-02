@@ -1,0 +1,5 @@
+2025-12-02 19:57:25,112 ERROR: Exception in wheel_of_fortune.file_handler.prepare_words: [Errno 2] No such file or directory: 'data/rusword.json'
+Traceback (most recent call last):
+  File "wheel_of_fortune\logging_utils.py", line 20, in wrapper
+  File "wheel_of_fortune\file_handler.py", line 14, in prepare_words
+FileNotFoundError: [Errno 2] No such file or directory: 'data/rusword.json'
