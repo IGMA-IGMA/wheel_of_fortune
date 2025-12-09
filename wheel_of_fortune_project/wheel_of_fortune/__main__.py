@@ -1,7 +1,4 @@
-from wheel_of_fortune.game import game_loop
-
-def main():
-    game_loop()
+from wheel_of_fortune.game import main
 
 if __name__ == "__main__":
     main()
