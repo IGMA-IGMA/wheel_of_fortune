@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['wheel_of_fortune\\__main__.py'],
+    ['wheeloffortune\\__main__.py'],
     pathex=[],
     binaries=[],
-    datas=[('data', 'data')],
+    datas=[('wheeloffortune/data', 'wheeloffortune/data')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
