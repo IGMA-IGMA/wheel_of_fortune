@@ -16,8 +16,8 @@ python -m wheel_of_fortune
 
 ```
 
-Структура проекта  
 ```
+Структура проекта  
 
 wheel_of_fortune/        — пакет с основным кодом
 **init**.py
